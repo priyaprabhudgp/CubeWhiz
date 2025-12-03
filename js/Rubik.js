@@ -29,8 +29,8 @@ var mini = "";
 
 var Invalid = false;
 var rev = false;
-
-maxTime = 800;
+var sol = "";
+maxTime = 800000000;
 
 while(minimum.length<200)
 	minimum=minimum+'a';
@@ -88,8 +88,9 @@ var print = function()
 	for(var i=1;i<=9;i++)
 		s+=y[i];
 
-	if(s.search("0")==-1)
-	document.getElementById("textarea").value=s;
+	if(s.search("0")==-1) {
+		document.getElementById("textarea").value=s;
+	}
 }
 
 function setCharAt(str,index,chr)
@@ -146,7 +147,7 @@ var printSoln = function()
 	str = str + "\nNo of Moves = "+String(minimum.length) + "\n" + col;
 
 	if(minimum.length>0)
-	document.getElementById("text").innerText=str;
+	document.getElementById("text").innerText=sol;
 }
 
 var reverse = function()
@@ -183,7 +184,7 @@ var Rev = function()
 	}
 }
 
-var submit = function()
+var submit = async function()
 {
 	document.getElementById("text").innerText="";
 	Invalid = false;
@@ -202,6 +203,78 @@ var submit = function()
 		}
 
 		print();
+		
+		// Get the cube state from textarea and send to solver
+		var cubeState = document.getElementById("textarea").value;
+		var newCubeState = "";
+		//U
+		newCubeState+=cubeState.substring(33,36);
+		newCubeState+=cubeState.substring(30,33);
+		newCubeState+=cubeState.substring(27,30);
+		//R
+		newCubeState+=cubeState.charAt(38);
+		newCubeState+=cubeState.charAt(41);
+		newCubeState+=cubeState.charAt(44);
+		newCubeState+=cubeState.charAt(37);
+		newCubeState+=cubeState.charAt(40);
+		newCubeState+=cubeState.charAt(43);
+		newCubeState+=cubeState.charAt(36);
+		newCubeState+=cubeState.charAt(39);
+		newCubeState+=cubeState.charAt(42);
+		//F
+		newCubeState+=cubeState.charAt(20);
+		newCubeState+=cubeState.charAt(23);
+		newCubeState+=cubeState.charAt(26);
+		newCubeState+=cubeState.charAt(19);
+		newCubeState+=cubeState.charAt(22);
+		newCubeState+=cubeState.charAt(25);
+		newCubeState+=cubeState.charAt(18);
+		newCubeState+=cubeState.charAt(21);
+		newCubeState+=cubeState.charAt(24);
+		//D
+		newCubeState+=cubeState.substring(9,18);
+		//L
+		newCubeState+=cubeState.charAt(8);
+		newCubeState+=cubeState.charAt(5);
+		newCubeState+=cubeState.charAt(2);
+		newCubeState+=cubeState.charAt(7);
+		newCubeState+=cubeState.charAt(4);
+		newCubeState+=cubeState.charAt(1);
+		newCubeState+=cubeState.charAt(6);
+		newCubeState+=cubeState.charAt(3);
+		newCubeState+=cubeState.charAt(0);
+		//B
+		newCubeState+=cubeState.charAt(47);
+		newCubeState+=cubeState.charAt(50);
+		newCubeState+=cubeState.charAt(53);
+		newCubeState+=cubeState.charAt(46);
+		newCubeState+=cubeState.charAt(49);
+		newCubeState+=cubeState.charAt(52);
+		newCubeState+=cubeState.charAt(45);
+		newCubeState+=cubeState.charAt(48);
+		newCubeState+=cubeState.charAt(51);
+		var new2CubeState = "";
+		for(const char of newCubeState) {
+			if(char == 'G') new2CubeState += 'U';
+			if(char == 'O') new2CubeState += 'R';
+			if(char == 'W') new2CubeState += 'F';
+			if(char == 'B') new2CubeState += 'D';
+			if(char == 'R') new2CubeState += 'L';
+			if(char == 'Y') new2CubeState += 'B';
+		}
+		try {
+			const response = await fetch('/solve', {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({cube: new2CubeState})
+			});
+			const data = await response.json();
+			sol = data.solution;
+		} catch(error) {
+			console.error('Error:', error);
+		}
+		sol = sol.substring(475);
+		
 		All_Face_solve();
 
 		if(Invalid == true)
@@ -209,8 +282,8 @@ var submit = function()
 			break sub;
 		}
 
-		printSoln();
 		paste();
+		printSoln();
 	}
 }
 
