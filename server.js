@@ -18,7 +18,7 @@ app.post('/solve', (req, res) => {
   }
 
   // Spawn a child process to run the Python solver
-  const pythonProcess = spawn('python', [path.join(__dirname, 'js', 'solver.py'), cube]);
+  const pythonProcess = spawn('python3', [path.join(__dirname, 'js', 'solver.py'), cube]);
 
   let solution = '';
   let error = '';
