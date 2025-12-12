@@ -1,5 +1,10 @@
 <html>
+
 <head>
+	<nav style="padding:10px; background:#c7baba;">
+  		<a href="index.html">Home</a> |
+  		<a href="about.html">About</a>
+	</nav>
 	<title>Rubik's Cube Solver</title>
 	<link rel="stylesheet" type="text/css" href="css/Rubik.css">
 	<script type="text/javascript" src="js/Rubik.js"></script>
@@ -19,9 +24,9 @@
 
 			<textarea id="textarea" spellcheck="false" cols="54" rows="2" style="font-weight: 700; font-family: Arial; font-size: 14px; margin-left:28px; margin-top: 10px;"></textarea>
 			<button id="enter" onclick="stringInput()">Enter</button>
-			<button id="openUploads" onclick="scrollToUploads()" style="margin-left:8px;">Open Uploads</button>
+			<!-- <button id="openUploads" onclick="scrollToUploads()" style="margin-left:8px;">Open Uploads</button> -->
 
-			<!-- Image upload / detection UI -->
+			<!-- Image upload / detection UI
 			<div id="imageUpload" style="margin-top:18px;">
 				<p><span style="font-weight: 700; font-family: Arial; font-size: 16px;">Upload Faces (detect colors)</span></p>
 				<p style="font-size:12px; margin-left:28px;">Upload one image per face. Align the face so stickers fit inside the overlay, then the app will sample a 3x3 grid.</p>
@@ -66,23 +71,23 @@
 				<div style="margin-left:28px; margin-top:8px">
 					<button onclick="applyAllDetected()">Apply Detected Faces</button>
 					<span style="font-size:12px; margin-left:8px;">(fills the grid and textarea)</span>
-				</div>
-			</div>
+				</div> -->
+			<!-- </div> -->
 <!-- End of Image upload / detection UI -->
-			<h1 style="margin-left: 30px; margin-top: 30px; font-size:25px; font-family: Arial;">Reverse Solution</h1>
+			<!-- <h1 style="margin-left: 30px; margin-top: 30px; font-size:25px; font-family: Arial;">Reverse Solution</h1> -->
 
-			<label class="switch">
+			<!-- <label class="switch">
 			  <input type="checkbox" id="checkbox">
 			  <span class="slider" onclick="Rev()"></span>
-			</label>
+			</label> -->
 
-			<div id="help-tip2">
+			<!-- <div id="help-tip2">
     			<p onclick="help2()">?</p>
-			</div>
+			</div> -->
 
-			<div class="gitlink">
+			<!-- <div class="gitlink">
 				<p id="gitlink"><a href="https://github.com/varunpatil/Rubiks-Cube-Solver" target="_blank" title="Github Code">Github</a></p>
-			</div>
+			</div> -->
 		</div>
 	</div>
 
@@ -210,6 +215,69 @@
 			</map>
 		</div>	
 	</div>
+
+	<div id="cubeContainer" style="width: 100%; height: 400px; border: 1px solid #ccc;"></div>
+
+<script type="module">
+  import RubiksCubeVisualizer from './js/cubeVisualizer.js';
+  const visualizer = new RubiksCubeVisualizer('cubeContainer');
+  
+  // Trigger animation when solution is displayed
+  function playAnimation(solutionMoves) {
+    visualizer.playSolution(solutionMoves);
+  }
+</script>
+
+	<!-- Image Upload Section -->
+	<div class="div4">
+		<div id="imageUpload" style="margin-top:18px;">
+			<p><span style="font-weight: 700; font-family: Arial; font-size: 16px;">Upload Faces (detect colors)</span></p>
+			<p style="font-size:12px; margin-left:28px;">Upload one image per face. Align the face so stickers fit inside the overlay, then the app will sample a 3x3 grid.</p>
+			<div style="display:flex; flex-wrap:wrap; gap:12px; margin-left:28px;">
+				<div class="face-upload">
+					<label>R (Red)</label><br>
+					<input type="file" id="fileR" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileR').click()">Upload R</button>
+					<canvas id="canvasR" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+				<div class="face-upload">
+					<label>B (Blue)</label><br>
+					<input type="file" id="fileB" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileB').click()">Upload B</button>
+					<canvas id="canvasB" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+				<div class="face-upload">
+					<label>W (White)</label><br>
+					<input type="file" id="fileW" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileW').click()">Upload W</button>
+					<canvas id="canvasW" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+				<div class="face-upload">
+					<label>G (Green)</label><br>
+					<input type="file" id="fileG" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileG').click()">Upload G</button>
+					<canvas id="canvasG" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+				<div class="face-upload">
+					<label>O (Orange)</label><br>
+					<input type="file" id="fileO" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileO').click()">Upload O</button>
+					<canvas id="canvasO" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+				<div class="face-upload">
+					<label>Y (Yellow)</label><br>
+					<input type="file" id="fileY" accept="image/*" style="display:none" />
+					<button onclick="document.getElementById('fileY').click()">Upload Y</button>
+					<canvas id="canvasY" width="180" height="180" style="border:1px solid #ccc; display:block; margin-top:6px"></canvas>
+				</div>
+			</div>
+			<div style="margin-left:28px; margin-top:8px">
+				<button onclick="applyAllDetected()">Apply Detected Faces</button>
+				<span style="font-size:12px; margin-left:8px;">(fills the grid and textarea)</span>
+			</div>
+		</div>
+	</div>
+	<!-- End of Image Upload Section -->
 
 </body>
 <!-- Image detection script -->

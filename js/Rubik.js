@@ -28,7 +28,7 @@ var minimum = "";
 var mini = "";
 
 var Invalid = false;
-var rev = false;
+// var rev = false;
 var sol = "";
 maxTime = 800000000;
 
@@ -98,6 +98,61 @@ function setCharAt(str,index,chr)
     return str.substr(0,index) + chr + str.substr(index+1);
 }
 
+// LocalStorage Functions
+function saveCubeData() {
+  const cubeData = {
+    r: r,
+    w: w,
+    o: o,
+    y: y,
+    b: b,
+    g: g
+  };
+  localStorage.setItem('cubeData', JSON.stringify(cubeData));
+}
+
+function loadCubeData() {
+  const saved = localStorage.getItem('cubeData');
+  if (saved) {
+    const cubeData = JSON.parse(saved);
+    r = cubeData.r;
+    w = cubeData.w;
+    o = cubeData.o;
+    y = cubeData.y;
+    b = cubeData.b;
+    g = cubeData.g;
+    updateGridDisplay(); // Refresh the visual grid
+  }
+}
+
+function clearCubeData() {
+  localStorage.removeItem('cubeData');
+  // Reset arrays to initial state
+  r = ['0','0','0','0','0','R','0','0','0','0'];
+  w = ['0','0','0','0','0','W','0','0','0','0'];
+  o = ['0','0','0','0','0','O','0','0','0','0'];
+  y = ['0','0','0','0','0','Y','0','0','0','0'];
+  b = ['0','0','0','0','0','B','0','0','0','0'];
+  g = ['0','0','0','0','0','G','0','0','0','0'];
+  updateGridDisplay();
+}
+
+function updateGridDisplay() {
+  // Update all button colors to match arrays
+  for(let i = 1; i <= 9; i++) {
+    document.getElementById('R' + i).className = 'button ' + r[i];
+    document.getElementById('W' + i).className = 'button ' + w[i];
+    document.getElementById('O' + i).className = 'button ' + o[i];
+    document.getElementById('Y' + i).className = 'button ' + y[i];
+    document.getElementById('B' + i).className = 'button ' + b[i];
+    document.getElementById('G' + i).className = 'button ' + g[i];
+  }
+}
+
+// Load data when page loads
+window.addEventListener('load', loadCubeData);
+
+
 var stringInput = function()
 {
 	s = document.getElementById("textarea").value;
@@ -131,8 +186,8 @@ var stringInput = function()
 
 var printSoln = function()
 {
-	if(rev == true)
-		reverse();
+	// if(rev == true)
+	// 	reverse();
 
 	recompress();
 	str="";
@@ -148,41 +203,46 @@ var printSoln = function()
 
 	if(minimum.length>0)
 	document.getElementById("text").innerText=sol;
+
+	// Play animation
+    if(typeof playAnimation !== 'undefined') {
+      playAnimation(sol);
+    }
 }
 
-var reverse = function()
-{
-	var temp = "";
-	for(var i=minimum.length-1;i>=0;i--)
-	{
-		if(minimum[i]>'a')
-			temp = temp + minimum[i].toUpperCase();
-		else
-			temp = temp + minimum[i].toLowerCase();
-	}
-	minimum = temp;
-}
+// var reverse = function()
+// {
+// 	var temp = "";
+// 	for(var i=minimum.length-1;i>=0;i--)
+// 	{
+// 		if(minimum[i]>'a')
+// 			temp = temp + minimum[i].toUpperCase();
+// 		else
+// 			temp = temp + minimum[i].toLowerCase();
+// 	}
+// 	minimum = temp;
+// }
 
-var Rev = function()
-{
-	if(document.getElementById("checkbox").checked==true)
-	{
-		rev=false;
-		if(document.getElementById("text").innerText!="")
-		{
-			reverse();
-			printSoln();
-		}
-	}
-	else
-	{
-		rev=true;
-		if(document.getElementById("text").innerText!="")
-		{
-			printSoln();
-		}
-	}
-}
+// var Rev = function()
+// {
+// 	if(document.getElementById("checkbox").checked==true)
+// 	{
+// 		rev=false;
+// 		if(document.getElementById("text").innerText!="")
+// 		{
+// 			reverse();
+// 			printSoln();
+// 		}
+// 	}
+// 	else
+// 	{
+// 		rev=true;
+// 		if(document.getElementById("text").innerText!="")
+// 		{
+// 			printSoln();
+// 		}
+// 	}
+// }
 
 var submit = async function()
 {
@@ -262,6 +322,7 @@ var submit = async function()
 			if(char == 'R') new2CubeState += 'L';
 			if(char == 'Y') new2CubeState += 'B';
 		}
+		console.log(new2CubeState.length);
 		try {
 			const response = await fetch('/solve', {
 				method: 'POST',

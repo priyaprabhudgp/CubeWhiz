@@ -18,7 +18,7 @@ app.post('/solve', (req, res) => {
   }
 
   // Spawn a child process to run the Python solver
-  const pythonProcess = spawn('python', [path.join(__dirname, 'js', 'solver.py'), cube]);
+  const pythonProcess = spawn('python3', [path.join(__dirname, 'js', 'solver.py'), cube]);
 
   let solution = '';
   let error = '';
@@ -36,6 +36,11 @@ app.post('/solve', (req, res) => {
       return res.status(500).json({ error: error || 'Python process failed' });
     }
 
+    // Log to server terminal
+    console.log('Cube State:', cube);
+    console.log('Solution:', solution.trim());
+    console.log('Move Count:', solution.trim().split(' ').length);
+    
     // Parse and return the solution
     res.json({ solution: solution.trim() });
   });

@@ -19,6 +19,7 @@
     };
 
     // mapping from face letter to DOM index order (HTML layout)
+    //  Ensure correct image to grid mapping
     const faceIndexMap = {
         'R': [7,8,9,4,5,6,1,2,3],
         'B': [7,4,1,8,5,2,9,6,3],
@@ -27,7 +28,9 @@
         'O': [1,2,3,4,5,6,7,8,9],
         'Y': [1,2,3,4,5,6,7,8,9]
     };
-
+// Helper: average color around (x,y) in ctx over size x size area
+// Returns [r,g,b]
+//Used to compute a representative color for each sticker when detecting a cube face.
     function avgAround(ctx, x, y, size){
         const w = ctx.canvas.width;
         const h = ctx.canvas.height;
@@ -44,21 +47,27 @@
         for(let i=0;i<data.length;i+=4){ r+=data[i]; g+=data[i+1]; b+=data[i+2]; c++; }
         return [Math.round(r/c), Math.round(g/c), Math.round(b/c)];
     }
-
+// Helper: map rgb to nearest reference color letter
+// Uses simple Euclidean distance in RGB space.
+// Returns one of 'R','B','W','G','O','Y'
+//Used to identify the color of each sticker based on the sampled RGB values.
     function mapColor(rgb){
         let best=null; let bestDist=1e9;
         for(const k in refs){
             const rc = refs[k];
             const d = (rgb[0]-rc[0])*(rgb[0]-rc[0]) + (rgb[1]-rc[1])*(rgb[1]-rc[1]) + (rgb[2]-rc[2])*(rgb[2]-rc[2]);
+            // Compares the sampled color to predefined reference colors and selects the closest match.
             if(d<bestDist){ bestDist=d; best=k; }
         }
         return best;
     }
-
+// Helper: draw 3x3 overlay on ctx
+//Used to visually guide the user in aligning the cube face within the image.
     function drawOverlay(ctx){
         const w = ctx.canvas.width; const h = ctx.canvas.height;
         ctx.strokeStyle = 'rgba(255,255,255,0.7)';
         ctx.lineWidth = 2;
+        // Draw two vertical and two horizontal lines to create a 3x3 grid overlay.
         for(let i=1;i<3;i++){
             // vertical
             ctx.beginPath(); ctx.moveTo(Math.round(w*i/3),0); ctx.lineTo(Math.round(w*i/3),h); ctx.stroke();
@@ -66,11 +75,12 @@
             ctx.beginPath(); ctx.moveTo(0,Math.round(h*i/3)); ctx.lineTo(w,Math.round(h*i/3)); ctx.stroke();
         }
     }
-
+// Process an uploaded image file for a given face
     function processImage(file, canvasId, faceLetter){
         const reader = new FileReader();
         reader.onload = function(ev){
             const img = new Image();
+            // When the image is loaded, draw it to the canvas and process it.
             img.onload = function(){
                 const canvas = document.getElementById(canvasId);
                 const ctx = canvas.getContext('2d');
@@ -89,6 +99,7 @@
 
                 // sample 3x3 centers
                 const samples = [];
+                // For each cell in the 3x3 grid, sample the color and map it to a cube color letter.
                 for(let row=0; row<3; row++){
                     for(let col=0; col<3; col++){
                         const sx = Math.round((col + 0.5) * cw / 3);
@@ -102,13 +113,20 @@
                         ctx.fillText(letter, sx-7, sy+6);
                     }
                 }
+                // store detected colors
                 detectedColors[faceLetter] = samples;
             };
+            // Set the image source to the loaded data URL.
             img.src = ev.target.result;
         };
+        // Read the file as a data URL to trigger the load.
         reader.readAsDataURL(file);
     }
-
+// Apply detected colors for one face into the UI and global arrays
+// Used by applyAllDetected()
+// faceLetter: one of 'R','B','W','G','O','Y'
+// colors: array of 9 letters
+// Updates both the visual buttons and the corresponding global arrays (r,b,w,g,o,y).
     function applyFaceToUI(faceLetter, colors){
         // colors is array of 9 letters in row-major top-left -> bottom-right
         const map = faceIndexMap[faceLetter];
@@ -121,7 +139,9 @@
             const el = document.getElementById(id);
             if(el){ el.className = 'button ' + letter; }
             // set global arrays if present (r,b,w,g,o,y)
+            // Assumes these arrays are defined globally in Rubik.js
             try{
+                //
                 if(faceLetter==='R') r[idx] = letter;
                 if(faceLetter==='B') b[idx] = letter;
                 if(faceLetter==='W') w[idx] = letter;
@@ -136,18 +156,23 @@
     window.applyAllDetected = function(){
         const faces = ['R','B','W','G','O','Y'];
         let any=false;
+        // For each face, if detected colors are available, apply them to the UI.
         for(const f of faces){
             if(detectedColors[f] && detectedColors[f].length===9){
                 applyFaceToUI(f, detectedColors[f]);
                 any=true;
             }
         }
+        // Notify user
         if(any){
             try{ print(); } catch(e){}
             alert('Applied detected faces. Review the grid and press Submit to solve.');
         } else {
             alert('No detected faces available. Upload images for faces first.');
         }
+
+        saveCubeData(); // Save to LocalStorage
+        alert('Applied detected faces. Review the grid and press Submit to solve.');
     };
 
     function init(){

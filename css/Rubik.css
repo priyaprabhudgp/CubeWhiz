@@ -1,15 +1,38 @@
 body
 {
+	margin-top: 120px; 
 	background-color: #e5e5e5;
 	margin: 0;
+	display: flex;
+	flex-wrap: wrap;
 }
+
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background: #c7baba;
+  padding: 10px;
+  z-index: 1000;
+}
+
 
 .div1
 {
-	width:30%;
+	/*width:30%;
+	padding-left: 10px;
 	height:100%;
-	position: fixed;
-	left: 0;
+	overflow-y: auto;
+	position: relative;
+	left: 0;*/
+  margin-top: 20px;
+  margin-bottom: 5%;
+  width: 30%;
+  padding-left: 10px;
+  position: relative;
+  padding-right: 10%;	
 }
 
 .Centered
@@ -20,19 +43,31 @@ body
 
 .div2
 {
-	width:34%;
+	/*width:34%;
 	height:100%;
-	position: fixed;
+	position: relative;
 	left:30%;
+	overflow-y: auto*/
+margin-top: 40px;
+	width: 34%;
+  position: relative;
+  padding: 0;
+
 }
 
 .div3
 {
-	width:39%;
+/*	width:39%;
 	height:100%;
-	position: fixed;
+	position: relative;
 	left:64%;
 	padding-top: 30px;
+	overflow-y: auto*/
+	margin-top: 20px;
+	width: 36%;
+  	position: relative;
+  	padding-top: 30px;
+	padding-left: 10%;
 }
 
 #selectedColor
@@ -45,7 +80,7 @@ body
 
 #grid
 {
-	padding-top: 60px;
+	padding-top: 0px;
 	padding-bottom: 60px;
 	padding-left: 65px;
 	height: 576px;
@@ -56,6 +91,8 @@ body
 	grid-row-gap: 10px;
 	grid-column-gap: 10px;
 	float: left;
+	padding-right: 65px;
+
 }
 
 .button
@@ -275,7 +312,7 @@ body
 	font-family: Arial;
 }
 
-#switchButton{ padding-left: 60px;}
+/* #switchButton{ padding-left: 60px;} */
 
 #leftImage
 {
@@ -339,7 +376,7 @@ body
 	color:#fff;
 }
 
-.gitlink{ position:relative;}
+/* .gitlink{ position:relative;}
 
 #gitlink
 {
@@ -351,12 +388,12 @@ body
 	font-family: Arial;
 	font-weight: bold;
 	color: black;
-}
+} */
 
 
 /* switch */
 
-.switch {
+/* .switch {
   position: relative;
   left: 250px;
   top: -48px;
@@ -369,9 +406,9 @@ body
   opacity: 0;
   width: 0;
   height: 0;
-}
+} */
 
-.slider {
+/* .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -403,10 +440,51 @@ input:checked + .slider {
 
 input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
-}
+} */
 
-input:checked + .slider:before {
+/* input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
+} */
+
+/* Image Upload Section */
+.div4
+{
+	width: 100%;
+	background-color: #f0f0f0;
+	padding: 20px;
+	margin-top: 20px;
+	border-top: 2px solid #999;
+	order: 4;
+}
+
+.face-upload
+{
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.face-upload label
+{
+	font-weight: 700;
+	font-family: Arial;
+	font-size: 14px;
+}
+
+.face-upload button
+{
+	font-weight: 700;
+	font-size: 14px;
+	height: 40px;
+	background-color: #d2d2d2;
+	border-width: 1;
+	cursor: pointer;
+	padding: 5px;
+}
+
+.face-upload button:hover
+{
+	background-color: #c0c0c0;
 }
