@@ -4,7 +4,7 @@
 - Before running this program on your device, please install the TwoPhase Library and verify that server.js references the Python version you have
 - We developed this on VS Code
 
-#Directions
+**#Directions**
 - Clone the GitHub repo
 Terminal:
 - install npm
